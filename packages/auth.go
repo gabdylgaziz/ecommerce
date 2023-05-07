@@ -1,12 +1,12 @@
 package packages
 
 import (
+	db2 "ecommerce/db"
 	"encoding/json"
+	"github.com/golang-jwt/jwt/v4"
 	"net/http"
 	"time"
-	"github.com/golang-jwt/jwt/v4"
 )
-
 
 var jwtKey = []byte("my_secret_key")
 
@@ -14,18 +14,18 @@ type Claims struct {
 	Data User `json:"data"`
 	jwt.RegisteredClaims
 }
-  
+
 func Signin(w http.ResponseWriter, r *http.Request) {
 	username := r.URL.Query().Get("username")
 	password := r.URL.Query().Get("password")
 	var account []User
 	var acc User
-	db := Connect()
+	db := db2.Connect()
 	db.Find(&account)
 
 	expectedPassword, ok := "nothing", false
 	for i := 0; i < len(account); i++ {
-		if(account[i].Username == username){
+		if account[i].Username == username {
 			expectedPassword = account[i].Password
 			ok = true
 			acc = account[i]
@@ -36,7 +36,7 @@ func Signin(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
-  
+
 	expirationTime := time.Now().Add(5 * time.Minute)
 
 	claims := &Claims{
@@ -45,7 +45,7 @@ func Signin(w http.ResponseWriter, r *http.Request) {
 			ExpiresAt: jwt.NewNumericDate(expirationTime),
 		},
 	}
-  
+
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	tokenString, err := token.SignedString(jwtKey)
@@ -59,7 +59,6 @@ func Signin(w http.ResponseWriter, r *http.Request) {
 		Expires: expirationTime,
 	})
 }
-  
 
 func Welcome(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
@@ -152,6 +151,3 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 		Expires: time.Now(),
 	})
 }
-
-
-
