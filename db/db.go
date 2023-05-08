@@ -17,7 +17,7 @@ func Connect() *gorm.DB {
 
 	fmt.Println("Connected to DB")
 
-	db.AutoMigrate(models.User{}, models.Item{}, models.Rating{}, models.Card{}, models.Comment{}, models.Order{})
+	db.AutoMigrate(models.User{}, models.Item{}, models.Rating{}, models.Card{}, models.Comment{}, models.Order{}, models.Address{})
 
 	return db
 }

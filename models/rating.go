@@ -1,7 +1,7 @@
 package models
 
 type Rating struct {
-	Id     int  `json:"Id"`
+	Id     int  `json:"Id" gorm:"autoincrement"`
 	Value  int  `json:"Value"`
 	User   User `json:"User"`
 	UserId int  `json:"UserId" gorm:"primaryKey"`

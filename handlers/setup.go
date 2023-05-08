@@ -35,13 +35,12 @@ func HandleRequests() {
 	r.HandleFunc("/logout", packages.Logout)
 
 	r.HandleFunc("/items/all", h.GetAllItems).Methods("GET")
-	r.Path("/items").Queries("min_cost", "{min_cost}",
-		"max_cost", "{max_cost}",
-		"min_rating", "{min_rating}",
-		"max_rating", "{max_rating}").HandlerFunc(h.GetFilteredItems).Methods("GET")
+
 	r.Path("/items").Queries("id", "{id}").HandlerFunc(h.GetItemById).Methods("GET")
 	r.HandleFunc("/items/{id}/rating", h.PostRating).Methods("POST")
+	r.HandleFunc("/items/{id}/rating", h.UpdateRating).Methods("PUT")
 	r.HandleFunc("/items/{id}/comment", h.PostComment).Methods("POST")
+	r.HandleFunc("/items", h.GetFilteredItems).Methods("GET")
 	r.HandleFunc("/items", h.CreateItem).Methods("POST")
 
 	fmt.Println("server is started")

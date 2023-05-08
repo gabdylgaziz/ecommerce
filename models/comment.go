@@ -3,7 +3,7 @@ package models
 import "time"
 
 type Comment struct {
-	Id          int       `json:"Id" gorm:"primaryKey"`
+	Id          int       `json:"Id" gorm:"primaryKey;autoincrement"`
 	Text        string    `json:"Text"`
 	Author      User      `json:"Author"`
 	AuthorId    int       `json:"AuthorId" gorm:"not null"`
