@@ -9,6 +9,17 @@ import (
 )
 
 func (h handler) PostAddress(w http.ResponseWriter, r *http.Request) {
+	c, err := r.Cookie("token")
+	if err != nil {
+		if err == http.ErrNoCookie {
+			w.WriteHeader(http.StatusUnauthorized)
+			json.NewEncoder(w).Encode("Please authorize")
+			return
+		}
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	claims := getData(c)
 	fmt.Println("creating a comment...")
 
 	defer r.Body.Close()
@@ -17,6 +28,7 @@ func (h handler) PostAddress(w http.ResponseWriter, r *http.Request) {
 
 	var address models.Address
 	json.Unmarshal(body, &address)
+	address.UserId = claims.Data.Id
 
 	if result := h.DB.Create(&address); result.Error != nil {
 		fmt.Println(result.Error)

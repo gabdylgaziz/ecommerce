@@ -14,6 +14,7 @@ import (
 
 
 func (h handler) PostComment(w http.ResponseWriter, r *http.Request) {
+	//чтобы взять данные об авторизованном пользователе
 	c, err := r.Cookie("token")
 	if err != nil {
 		if err == http.ErrNoCookie {
@@ -38,7 +39,8 @@ func (h handler) PostComment(w http.ResponseWriter, r *http.Request) {
 
 	//fmt.Println(claims.Data.Id)
 	//fmt.Println(comment)
-
+	
+	//присвоить айдишку автора к комменту
 	comment.AuthorId = claims.Data.Id
 
 	comment.CommentDate = time.Now()
