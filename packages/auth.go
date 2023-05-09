@@ -10,14 +10,26 @@ import (
 
 var jwtKey = []byte("my_secret_key")
 
+type FromRequest struct {
+	Password string `json:"password"`
+	Username string `json:"username"`
+}
+
 type Claims struct {
 	Data User `json:"data"`
 	jwt.RegisteredClaims
 }
 
 func Signin(w http.ResponseWriter, r *http.Request) {
-	username := r.URL.Query().Get("username")
-	password := r.URL.Query().Get("password")
+	var gets FromRequest
+	err := json.NewDecoder(r.Body).Decode(&gets)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	//username := r.URL.Query().Get("username")
+	//password := r.URL.Query().Get("password")
+	//gets.Username gets.Password
 	var account []User
 	var acc User
 	db := db2.Connect()
@@ -25,14 +37,14 @@ func Signin(w http.ResponseWriter, r *http.Request) {
 
 	expectedPassword, ok := "nothing", false
 	for i := 0; i < len(account); i++ {
-		if account[i].Username == username {
+		if account[i].Username == gets.Username {
 			expectedPassword = account[i].Password
 			ok = true
 			acc = account[i]
 		}
 	}
 	//fmt.Println(expectedPassword, ok)
-	if !ok || expectedPassword != password {
+	if !ok || expectedPassword != gets.Password {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
