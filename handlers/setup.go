@@ -4,9 +4,10 @@ import (
 	"ecommerce/db"
 	"ecommerce/packages"
 	"fmt"
+	"net/http"
+
 	"github.com/gorilla/mux"
 	"gorm.io/gorm"
-	"net/http"
 )
 
 type handler struct {
@@ -30,6 +31,7 @@ func HandleRequests() {
 
 	r.HandleFunc("/", mainPage)
 	r.HandleFunc("/signin", packages.Signin)
+	r.HandleFunc("/signup", packages.Signup)
 	r.HandleFunc("/welcome", packages.Welcome)
 	r.HandleFunc("/refresh", packages.Refresh)
 	r.HandleFunc("/logout", packages.Logout)

@@ -3,6 +3,7 @@ package packages
 import (
 	db2 "ecommerce/db"
 	"encoding/json"
+	"ecommerce/models"
 	"github.com/golang-jwt/jwt/v4"
 	"net/http"
 	"time"
@@ -71,6 +72,21 @@ func Signin(w http.ResponseWriter, r *http.Request) {
 		Expires: expirationTime,
 	})
 }
+
+func Signup(w http.ResponseWriter, r *http.Request) {
+	var data models.User
+	err := json.NewDecoder(r.Body).Decode(&data)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	db := db2.Connect()
+
+	db.Create(&data)
+	
+}
+
 
 func Welcome(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
