@@ -2,14 +2,31 @@ package handlers
 
 import (
 	"ecommerce/models"
+	//"ecommerce/packages"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"time"
+	//"github.com/golang-jwt/jwt/v4"
 )
 
+
+
 func (h handler) PostComment(w http.ResponseWriter, r *http.Request) {
+	c, err := r.Cookie("token")
+	if err != nil {
+		if err == http.ErrNoCookie {
+			w.WriteHeader(http.StatusUnauthorized)
+			json.NewEncoder(w).Encode("Please authorize")
+			return
+		}
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	claims := getData(c)
+	//fmt.Println(claims)
+
 	fmt.Println("creating a comment...")
 
 	defer r.Body.Close()
@@ -18,6 +35,11 @@ func (h handler) PostComment(w http.ResponseWriter, r *http.Request) {
 
 	var comment models.Comment
 	json.Unmarshal(body, &comment)
+
+	//fmt.Println(claims.Data.Id)
+	//fmt.Println(comment)
+
+	comment.AuthorId = claims.Data.Id
 
 	comment.CommentDate = time.Now()
 

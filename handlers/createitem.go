@@ -9,6 +9,16 @@ import (
 )
 
 func (h handler) CreateItem(w http.ResponseWriter, r *http.Request) {
+	_, err := r.Cookie("token")
+	if err != nil {
+		if err == http.ErrNoCookie {
+			w.WriteHeader(http.StatusUnauthorized)
+			json.NewEncoder(w).Encode("Please authorize")
+			return
+		}
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 
 	fmt.Println("creating an item...")
 
