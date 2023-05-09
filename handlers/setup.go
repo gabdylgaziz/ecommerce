@@ -37,9 +37,18 @@ func HandleRequests() {
 	r.HandleFunc("/items/all", h.GetAllItems).Methods("GET")
 
 	r.Path("/items").Queries("id", "{id}").HandlerFunc(h.GetItemById).Methods("GET")
+	r.Path("/items").Queries("id", "{id}").HandlerFunc(h.UpdateItemById).Methods("PUT")
+	r.Path("/items").Queries("id", "{id}").HandlerFunc(h.DeleteItemById).Methods("DELETE")
+
+	r.HandleFunc("/items/{id}/rating", h.GetItemRating).Methods("GET")
 	r.HandleFunc("/items/{id}/rating", h.PostRating).Methods("POST")
 	r.HandleFunc("/items/{id}/rating", h.UpdateRating).Methods("PUT")
+
+	r.HandleFunc("/items/{id}/comment", h.GetItemComments).Methods("GET")
 	r.HandleFunc("/items/{id}/comment", h.PostComment).Methods("POST")
+	r.HandleFunc("/items/{id}/comment", h.UpdateComment).Methods("PUT")
+	r.HandleFunc("/items/{id}/comment", h.DeleteComment).Methods("DELETE")
+
 	r.HandleFunc("/items", h.GetFilteredItems).Methods("GET")
 	r.HandleFunc("/items", h.CreateItem).Methods("POST")
 
