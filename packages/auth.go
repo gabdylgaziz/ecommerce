@@ -2,8 +2,8 @@ package packages
 
 import (
 	db2 "ecommerce/db"
-	"encoding/json"
 	"ecommerce/models"
+	"encoding/json"
 	"github.com/golang-jwt/jwt/v4"
 	"net/http"
 	"time"
@@ -84,9 +84,8 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	db := db2.Connect()
 
 	db.Create(&data)
-	
-}
 
+}
 
 func Welcome(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")

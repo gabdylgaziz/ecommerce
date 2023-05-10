@@ -51,8 +51,13 @@ func HandleRequests() {
 	r.HandleFunc("/items/{id}/comment", h.UpdateComment).Methods("PUT")
 	r.HandleFunc("/items/{id}/comment", h.DeleteComment).Methods("DELETE")
 
+	r.HandleFunc("/items/{id}/add", h.AddItemToCart).Methods("POST")
+
 	r.HandleFunc("/items", h.GetFilteredItems).Methods("GET")
 	r.HandleFunc("/items", h.CreateItem).Methods("POST")
+
+	r.HandleFunc("/cart", h.GetCartItems).Methods("GET")
+	r.HandleFunc("/cart", h.Checkout).Methods("POST")
 
 	fmt.Println("server is started")
 	http.ListenAndServe(":2004", r)
