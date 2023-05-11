@@ -55,31 +55,31 @@ func (h handler) Checkout(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, item := range userItems {
-		var user models.User
-		var address models.Address
-
-		if result := h.DB.Where("id = ?", userId).First(&user); result.Error != nil {
-			fmt.Println(result.Error)
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
-
-		if result := h.DB.Where("user_id = ?", userId).First(&address); result.Error != nil {
-			fmt.Println(result.Error)
-			w.WriteHeader(http.StatusBadRequest)
-			return
-		}
-
-		fmt.Println("passed")
+		//var user models.User
+		//var address models.Address
 
 		var order = models.Order{
-			User:      user,
-			UserId:    userId,
-			Item:      item,
-			ItemId:    item.Id,
-			Address:   address,
-			AddressId: address.Id,
+			UserId: userId,
+			ItemId: item.Id,
 		}
+
+		if result := h.DB.Where("id = ?", userId).Take(&order.User); result.Error != nil {
+			fmt.Println(result.Error)
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		fmt.Println(order.User)
+
+		if result := h.DB.Where("user_id = ?", userId).First(&order.Address); result.Error != nil {
+			fmt.Println(result.Error)
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		order.AddressId = order.Address.Id
+
+		fmt.Println(order.Address)
 
 		if result := h.DB.Create(&order); result.Error != nil {
 			fmt.Println(result.Error)

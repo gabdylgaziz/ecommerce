@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func (h handler) GetUserComments(w http.ResponseWriter, r *http.Request) {
+func (h handler) GetUserOrders(w http.ResponseWriter, r *http.Request) {
 	c, err := r.Cookie("token")
 	if err != nil {
 		if err == http.ErrNoCookie {
@@ -20,10 +20,12 @@ func (h handler) GetUserComments(w http.ResponseWriter, r *http.Request) {
 	}
 	claims := getData(c)
 
-	var comments []models.Comment
+	fmt.Println("getting orders for a user...")
 
-	if result := h.DB.Where("author_id = ?", claims.Data.Id).Preload("Author").
-		Preload("Item").Find(&comments); result.Error != nil {
+	var id = claims.Data.Id
+	var orders []models.Order
+
+	if result := h.DB.Where("user_id = ?", id).Preload("User").Preload("Item").Preload("Address").Find(&orders); result.Error != nil {
 		fmt.Println(result.Error)
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -31,7 +33,7 @@ func (h handler) GetUserComments(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(comments)
+	json.NewEncoder(w).Encode(orders)
 
-	fmt.Println("comments are sent")
+	fmt.Println("item is printed")
 }

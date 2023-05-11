@@ -59,6 +59,14 @@ func HandleRequests() {
 	r.HandleFunc("/cart", h.GetCartItems).Methods("GET")
 	r.HandleFunc("/cart", h.Checkout).Methods("POST")
 
+	r.HandleFunc("/orders", h.GetUserOrders).Methods("GET")
+
+	r.HandleFunc("/addresses", h.PostAddress).Methods("POST")
+	r.HandleFunc("/addresses", h.UpdateAddress).Methods("PUT")
+	r.HandleFunc("/addresses", h.DeleteAddress).Methods("DELETE")
+
+	r.HandleFunc("/comments", h.GetUserComments).Methods("GET")
+
 	fmt.Println("server is started")
 	http.ListenAndServe(":2004", r)
 }

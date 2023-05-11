@@ -28,14 +28,14 @@ func (h handler) DeleteAddress(w http.ResponseWriter, r *http.Request) {
 
 	var address models.Address
 	json.Unmarshal(body, &address)
-	
-	if address.UserId != claims.Data.Id {
-		w.WriteHeader(http.StatusUnauthorized)
-		json.NewEncoder(w).Encode("You cant do this")
-		return
-	}
 
-	if result := h.DB.Model(models.Address{}).Where("id = ?", address.Id).Delete(&address); result.Error != nil {
+	//if address.UserId != claims.Data.Id {
+	//	w.WriteHeader(http.StatusUnauthorized)
+	//	json.NewEncoder(w).Encode("You cant do this")
+	//	return
+	//}
+
+	if result := h.DB.Model(models.Address{}).Where("user_id = ?", claims.Data.Id).Delete(&address); result.Error != nil {
 		fmt.Println(result.Error)
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -43,7 +43,7 @@ func (h handler) DeleteAddress(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(http.StatusAccepted)
-	json.NewEncoder(w).Encode("Updated")
+	json.NewEncoder(w).Encode("Deleted")
 
-	fmt.Println("address has been updated")
+	fmt.Println("address has been deleted")
 }

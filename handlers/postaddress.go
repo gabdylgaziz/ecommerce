@@ -20,7 +20,7 @@ func (h handler) PostAddress(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	claims := getData(c)
-	fmt.Println("creating a comment...")
+	fmt.Println("creating an address...")
 
 	defer r.Body.Close()
 	body, err := io.ReadAll(r.Body)
@@ -47,5 +47,5 @@ func (h handler) PostAddress(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode("Created")
 
-	fmt.Println("comment has been posted")
+	fmt.Println("address has been posted")
 }
